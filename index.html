@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Adbrew — Dashboards</title>
+<style>
+:root{--surface-1:#fcfcfb;--plane:#f9f9f7;--text-primary:#0b0b0b;--text-secondary:#52514e;--muted:#898781;
+--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,.10);
+--series-1:#2a78d6;--series-2:#eb6834;--series-3:#1baf7a;--good:#0ca30c;--warning:#fab219;--critical:#d03b3b;color-scheme:light}
+html[data-theme=dark]{--surface-1:#1a1a19;--plane:#0d0d0d;--text-primary:#fff;--text-secondary:#c3c2b7;--muted:#898781;
+--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,.10);
+--series-1:#3987e5;--series-2:#d95926;--series-3:#199e70;color-scheme:dark}
+@media (prefers-color-scheme:dark){html:not([data-theme=light]){--surface-1:#1a1a19;--plane:#0d0d0d;--text-primary:#fff;--text-secondary:#c3c2b7;
+--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,.10);--series-1:#3987e5;--series-2:#d95926;--series-3:#199e70;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--plane);color:var(--text-primary);
+font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 72px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--text-secondary);font-size:14px;margin:0}
+.meta{color:var(--muted);font-size:12.5px;margin:6px 0 0}
+button.tg{background:var(--surface-1);color:var(--text-primary);border:1px solid var(--border);
+border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
+button.tg:hover{border-color:var(--baseline)}
+.banner{margin:20px 0 0;padding:12px 14px;border:1px solid var(--border);
+border-radius:8px;background:var(--surface-1);font-size:13.5px;color:var(--text-secondary)}
+.banner b{color:var(--text-primary)}
+.banner ul{margin:6px 0 0;padding-left:20px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:22px 0}
+.tile{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.tile-l{font-size:12.5px;color:var(--text-secondary);font-weight:600;letter-spacing:.01em}
+.tile-v{font-size:38px;line-height:1.1;margin:6px 0 2px;letter-spacing:-.02em}
+.tile-s{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:16px;margin-bottom:16px}
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:18px 20px 20px}
+.card.full{grid-column:1/-1}
+h2{font-size:15px;margin:0 0 3px;letter-spacing:-.005em}
+.cs{font-size:12.5px;color:var(--muted);margin:0 0 16px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 14px}
+.lg{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-secondary)}
+.lg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.bars{display:flex;flex-direction:column;gap:9px}
+.row{display:grid;grid-template-columns:170px 1fr 52px;align-items:center;gap:12px}
+.rl{font-size:13px;color:var(--text-secondary);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv{font-size:13px;color:var(--text-primary);font-variant-numeric:tabular-nums;font-weight:600}
+.track{height:16px;background:var(--grid);border-radius:3px;overflow:hidden;display:flex}
+.track.thin{height:11px}
+.fill{height:100%;border-radius:0 4px 4px 0;min-width:3px}
+.stack .seg{height:100%;position:relative;display:flex;align-items:center;justify-content:center;
+border-right:2px solid var(--surface-1)}
+.stack .seg:last-child{border-right:0;border-radius:0 4px 4px 0}
+.sv{font-size:10.5px;font-weight:700;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.45);font-variant-numeric:tabular-nums}
+.group{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:start;padding-bottom:4px}
+.gl{padding-top:0}
+.dim{color:var(--muted);font-size:11.5px}
+.gstack{display:flex;flex-direction:column;gap:5px}
+.grow{display:grid;grid-template-columns:1fr 52px;gap:12px;align-items:center}
+.note{font-size:12px;color:var(--muted);margin:14px 0 0;padding-top:12px;border-top:1px solid var(--grid)}
+.tw{overflow-x:auto;margin-top:4px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;
+position:sticky;top:0;background:var(--surface-1)}
+td:nth-child(n+5){font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--plane)}
+a{color:var(--series-1)}
+.search{width:100%;max-width:300px;padding:8px 11px;border:1px solid var(--border);border-radius:7px;
+background:var(--plane);color:var(--text-primary);font:inherit;font-size:13px;margin-bottom:12px}
+.tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;background:var(--text-primary);
+color:var(--surface-1);font-size:12px;padding:6px 9px;border-radius:6px;z-index:99;white-space:nowrap;font-weight:500}
+[data-tip]{cursor:default;outline:none}
+[data-tip]:focus-visible{outline:2px solid var(--series-1);outline-offset:2px}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--grid);color:var(--muted);font-size:12px}
+@media(max-width:560px){.row,.group{grid-template-columns:110px 1fr 44px}.group{grid-template-columns:110px 1fr}}
+
+.banner{border-left:3px solid var(--baseline)}
+.banner.b-warn{border-left-color:var(--warning)}
+.banner.b-info{border-left-color:var(--series-1)}
+.banner+.banner{margin-top:10px}
+.dim2{color:var(--muted);font-size:12px}
+
+.dlist{display:grid;gap:14px;margin-top:22px}
+.dcard{display:block;background:var(--surface-1);border:1px solid var(--border);border-radius:10px;
+padding:18px 20px;text-decoration:none;color:inherit}
+.dcard:hover{border-color:var(--baseline)}
+.dcard h3{margin:0 0 4px;font-size:16px}
+.dcard p{margin:0;font-size:13px;color:var(--text-secondary)}
+.dcard .st{font-size:12px;color:var(--muted);margin-top:8px}
+.soon{opacity:.55;pointer-events:none}
+</style></head><body><div class="wrap">
+<header><div><h1>Adbrew — Dashboards</h1>
+<p class="sub">Live outreach and event dashboards built from HubSpot.</p></div>
+<button class="tg" id="tg">Dark mode</button></header>
+
+<div class="banner b-warn"><b>Internal — contains personal data.</b>
+These pages include names, work emails and job titles of individual contacts. The deployment is public;
+do not share the URL outside Adbrew.</div>
+
+<div class="dlist">
+<a class="dcard" href="/accelerate-survey-leads/">
+<h3>Amazon Accelerate 2026 — Survey Leads</h3>
+<p>108 active leads across 47 companies who submitted the event-preference survey. Outreach stage, channel coverage and engagement by rep.</p>
+<div class="st">Rebuilt every 2 hours · weekdays 9am–7pm IST</div></a>
+
+<div class="dcard soon">
+<h3>Amazon — Dashboard <span style="font-weight:400;color:var(--muted)">(not built yet)</span></h3>
+<p>Placeholder. Add the build to <code>/amazon/index.html</code> and it appears here.</p>
+<div class="st">—</div></div>
+</div>
+
+<footer>One folder per dashboard. Each is a self-contained static page — no build step, no dependencies.</footer>
+</div>
+<script>
+var t=document.getElementById('tg'),h=document.documentElement;
+function setT(m){h.setAttribute('data-theme',m);t.textContent=m==='dark'?'Light mode':'Dark mode';}
+setT(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+t.onclick=function(){setT(h.getAttribute('data-theme')==='dark'?'light':'dark');};
+</script></body></html>

@@ -1,0 +1,3 @@
+# Internal dashboards containing personal data. Do not index.
+User-agent: *
+Disallow: /
